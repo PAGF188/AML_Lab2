@@ -169,22 +169,36 @@ def eval_model(model, testloader, criterion):
 def eval_unet(model, testloader, n_samples):
     since = time.time()
     model.eval()   # Set model to evaluate mode
-
+    actual_samples = 0
     for inputs, labels in testloader:
         inputs = inputs.to(device=DEVICE, dtype=torch.float32)
         labels = labels.to(device=DEVICE, dtype=torch.long).squeeze(1)
-        plt.imshow(labels.permute(1, 2, 0).cpu())
-        plt.show()
+        
+        # Para mostrar imagen
+        if actual_samples < n_samples:
+            plt.clf()
+            fig, axs = plt.subplots(1, 2)
+            axs[0].imshow(labels.permute(1, 2, 0).cpu())
+            axs[0].set_title('True mask')
+
         labels = F.one_hot(labels, N_CLASES_UNET).permute(0, 3, 1, 2).float()
         
         with torch.no_grad():
             # predict the mask
             output = model(inputs)
-            image_mask = output.argmax(dim=1).cpu()
+            image_mask = output.argmax(dim=1)
+            if actual_samples < n_samples:
+                axs[1].imshow(image_mask.permute(1, 2, 0).cpu())
+                axs[1].set_title('Predicted mask')
+                actual_samples += 1
+                plt.savefig(MODEL_SAVE_DIR + "_" + str(actual_samples) + ".png")
             output = F.one_hot(image_mask, N_CLASES_UNET).permute(0, 3, 1, 2).float()
-            pdb.set_trace()
-            asd =5
 
+            # Metricas
+            asd = 5
+            
+    time_elapsed = time.time() - since
+    print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
 # SHOW DATASET
 def imshow(dataloader):
