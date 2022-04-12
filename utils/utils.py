@@ -12,6 +12,7 @@ import torch.nn.functional as F
 from torch import Tensor
 import pdb
 import seaborn as sns
+from sklearn import metrics
 
 def buildDataLoaders_denseNet(data_augmentation=False):
     # Transform to resize data to DenseNet dimensions
@@ -172,9 +173,11 @@ def eval_unet(model, testloader, n_samples):
     model.eval()   # Set model to evaluate mode
     actual_samples = 0
 
-    # METRICS. TP,FN,FP,TN para cada clase
-    CMS = np.zeros((N_CLASES_UNET, 2, 2))
-    CMS = torch.tensor(CMS).to(device=DEVICE)
+    # METRICS
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
 
     # Batch is of size 1
     for inputs, labels in testloader:
@@ -183,7 +186,7 @@ def eval_unet(model, testloader, n_samples):
 
         inputs = inputs.to(device=DEVICE, dtype=torch.float32)
         labels = labels.to(device=DEVICE, dtype=torch.long).squeeze(1)
-        
+
         # Para mostrar imagen
         if actual_samples < n_samples:
             plt.clf()
@@ -205,13 +208,13 @@ def eval_unet(model, testloader, n_samples):
             output = F.one_hot(image_mask, N_CLASES_UNET).permute(0, 3, 1, 2).float()
 
             # Metricas
-            CMS[:,0,0] += (output + labels == 2).sum(dim=(2,3)).squeeze(0)  # TP
-            CMS[:,0,1] += (output - labels == -1).sum(dim=(2,3)).squeeze(0)  # FN
-            CMS[:,1,0] += (output - labels == 1).sum(dim=(2,3)).squeeze(0)  # FP
-            CMS[:,1,1] += (output + labels == 0).sum(dim=(2,3)).squeeze(0)  # TN
+            FN += (output - labels == -1).sum() # FN
+            FP += (output - labels == 1).sum()  # FP
+            TP += (output + labels == 2).sum()  # TP
+            TN += (output + labels == 0).sum()  # TN
 
     # MATRIZ CONFUSION GENERAL
-    cmat = CMS.sum(dim=0).cpu().numpy()
+    cmat = [[TP.cpu(), FN.cpu()], [FP.cpu(), TN.cpu()]]
     plt.clf()
     sns.heatmap(cmat/np.sum(cmat), cmap="Reds", annot=True, fmt = '.2%', square=1,   linewidth=2.)
     plt.xlabel("predictions")
@@ -219,7 +222,8 @@ def eval_unet(model, testloader, n_samples):
     plt.savefig(MODEL_SAVE_DIR + "_confusionMatrix.png")
     
     # CURVAS ROC
-    
+    # Por hacer
+
     time_elapsed = time.time() - since
     print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
