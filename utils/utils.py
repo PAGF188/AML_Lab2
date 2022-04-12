@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from torch import Tensor
 import pdb
+import seaborn as sns
 
 def buildDataLoaders_denseNet(data_augmentation=False):
     # Transform to resize data to DenseNet dimensions
@@ -170,7 +171,18 @@ def eval_unet(model, testloader, n_samples):
     since = time.time()
     model.eval()   # Set model to evaluate mode
     actual_samples = 0
+
+    # METRICS
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
+    
+    # Batch is of size 1
     for inputs, labels in testloader:
+        # Batch is of size 1
+        assert inputs.shape[0] == 1
+
         inputs = inputs.to(device=DEVICE, dtype=torch.float32)
         labels = labels.to(device=DEVICE, dtype=torch.long).squeeze(1)
         
@@ -195,9 +207,18 @@ def eval_unet(model, testloader, n_samples):
             output = F.one_hot(image_mask, N_CLASES_UNET).permute(0, 3, 1, 2).float()
 
             # Metricas
-            asd = 5
+            FN += (output - labels == -1).sum() # FN
+            FP += (output - labels == 1).sum()  # FP
+            TP += (output + labels == 2).sum()  # TP
+            TN += (output + labels == 0).sum()  # TN
             
     time_elapsed = time.time() - since
+    cmat = [[TP.cpu(), FN.cpu()], [FP.cpu(), TN.cpu()]]
+    plt.clf()
+    sns.heatmap(cmat/np.sum(cmat), cmap="Reds", annot=True, fmt = '.2%', square=1,   linewidth=2.)
+    plt.xlabel("predictions")
+    plt.ylabel("real values")
+    plt.savefig(MODEL_SAVE_DIR + "_confusionMatrix.png")
     print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
 # SHOW DATASET
