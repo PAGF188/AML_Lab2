@@ -1,0 +1,25 @@
+LAB2 - PART1 EXECUTION
+BUILDING DATALOADERS...
+MODEL: pretrained_not_augmentation.pt
+MODEL pretrained_not_augmentation.pt is already trained
+EVALUATING MODE pretrained_not_augmentation.pt
+test Loss: 0.0201 Acc: 0.9943
+Test complete in 0m 25s
+
+MODEL: pretrained_augmentation.pt
+MODEL pretrained_augmentation.pt is already trained
+EVALUATING MODE pretrained_augmentation.pt
+test Loss: 0.0232 Acc: 0.9916
+Test complete in 0m 23s
+
+MODEL: scratch_not_augmentation.pt
+MODEL scratch_not_augmentation.pt is already trained
+EVALUATING MODE scratch_not_augmentation.pt
+test Loss: 0.0202 Acc: 0.9934
+Test complete in 0m 23s
+
+MODEL: scratch_augmentation.pt
+MODEL scratch_augmentation.pt is already trained
+EVALUATING MODE scratch_augmentation.pt
+test Loss: 0.0839 Acc: 0.9727
+Test complete in 0m 23s

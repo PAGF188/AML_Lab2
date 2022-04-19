@@ -1,5 +1,4 @@
 from config import *
-
 from utils.utils import *
 from models.models import *
 import torch
@@ -31,36 +30,31 @@ def part1():
     # MODELO 1 -> Preentrenado + no data augmentation
     model = denseNet121_pretrained()
     model = model.to(DEVICE)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR_DENSENET)
     _part1_aux(MODEL2_PRETRAINED_NOT_AUGMENTATION, model, dataloaders_dict_base, optimizer)
 
     # MODELO 2 -> Preentrenado + data augmentation
     model = denseNet121_pretrained()
     model = model.to(DEVICE)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR_DENSENET)
     _part1_aux(MODEL1_PRETRAINED_AUGMENTATION, model, dataloaders_dict_data_augmentation, optimizer)
 
     # MODELO 3 -> Scratch + no data augmentation
     model = denseNet121_basic()
     model = model.to(DEVICE)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR_DENSENET)
     _part1_aux(MODEL4_SCRATCH_NOT_AUGMENTATION, model, dataloaders_dict_base, optimizer)
 
     # MODELO 4 -> Scratch + data augmentation
     model = denseNet121_basic()
     model = model.to(DEVICE)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR_DENSENET)
     _part1_aux(MODEL3_SCRATCH_AUGMENTATION, model, dataloaders_dict_data_augmentation, optimizer)
 
 
 def part2():
     print("BUILDING DATALOADERS...")
     dataloader = buildDataLoaders_UNET((572,572))
-    # # Prueba dataloader
-    # total = 0
-    # for inputs, labels in dataloader['train']:
-    #     total += 1
-    # print(total)
 
     model = UNet()
     model = model.to(DEVICE)
@@ -84,5 +78,5 @@ def part2():
 if __name__ == "__main__":
     torch.manual_seed(88)
     print("LAB2 - PART1 EXECUTION")
-    #part1()
+    part1()
     part2()

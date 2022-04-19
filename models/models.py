@@ -103,7 +103,7 @@ class UNet(nn.Module):
     class DoubleConv(nn.Module):
         def __init__(self, in_channels, features):
             super().__init__()
-            # Instead of pad==, 1 -> conseguir mism size en salida.
+            # Pad=1 -> conseguir mism size en salida.
             self.double_conv = nn.Sequential(
                 nn.Conv2d(in_channels, features, kernel_size=3, padding=1, bias=False),
                 nn.BatchNorm2d(features),

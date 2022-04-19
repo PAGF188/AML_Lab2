@@ -12,7 +12,7 @@ import torch.nn.functional as F
 from torch import Tensor
 import pdb
 import seaborn as sns
-from sklearn import metrics
+from sklearn.metrics import confusion_matrix
 
 def buildDataLoaders_denseNet(data_augmentation=False):
     # Transform to resize data to DenseNet dimensions
@@ -48,7 +48,6 @@ def buildDataLoaders_UNET(image_size):
     trainset = SegmentationMNIST(DATA_DIR, train=True, image_size=image_size)
     validationset = SegmentationMNIST(DATA_DIR, train=False, image_size=image_size)
     # imshow(trainset)
-    # pdb.set_trace()
     # Build loaders
     train_loader = DataLoader(trainset, batch_size=BACTH_SIZE2, shuffle=True)
     val_loader = DataLoader(validationset, batch_size=BACTH_SIZE2, shuffle=True)
@@ -58,7 +57,7 @@ def buildDataLoaders_UNET(image_size):
 
     return dataloaders_dict
 
-
+# Clasification
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=5):
     since = time.time()
 
@@ -101,47 +100,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=5):
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     return model
 
-def train_unet(model, dataloaders, criterion, optimizer, num_epochs=5):
-    since = time.time()
-
-    for epoch in range(num_epochs):
-        init_epoch_time = time.time()
-        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
-        print('-' * 10)
-
-        model.train()  # Set model to training mode
-        running_loss = 0.0
-
-        # Iterate over data.
-        for inputs, labels in dataloaders['train']:
-            inputs = inputs.to(device=DEVICE, dtype=torch.float32)
-            labels = labels.to(device=DEVICE, dtype=torch.long).squeeze(1)
-            # zero the parameter gradients
-            optimizer.zero_grad()
-
-            # forward
-            with torch.set_grad_enabled(True):
-                outputs = model(inputs)
-                loss = criterion(outputs, labels) 
-                loss += dice_loss(F.softmax(outputs, dim=1), F.one_hot(labels, N_CLASES_UNET).permute(0, 3, 1, 2).float(), multiclass=True)
-                #_, preds = torch.max(outputs, 1)
-                loss.backward()
-                optimizer.step()
-
-            # statistics
-            running_loss += loss.item() * inputs.size(0)
-            #running_corrects += torch.sum(preds == labels.data)
-
-        epoch_loss = running_loss / len(dataloaders['train'].dataset)
-        print('{} Loss: {:.4f}'.format('train', epoch_loss))
-        print(f"Time per epoch: {time.time() - init_epoch_time}")
-        print()
-
-    time_elapsed = time.time() - since
-    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-    return model
-
-
+# Clasification
 def eval_model(model, testloader, criterion):
     since = time.time()
     model.eval()   # Set model to evaluate mode
@@ -168,22 +127,56 @@ def eval_model(model, testloader, criterion):
     time_elapsed = time.time() - since
     print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
+
+# Segmentation
+def train_unet(model, dataloaders, criterion, optimizer, num_epochs=5):
+    since = time.time()
+
+    for epoch in range(num_epochs):
+        init_epoch_time = time.time()
+        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
+        print('-' * 10)
+
+        model.train()  # Set model to training mode
+        running_loss = 0.0
+
+        # Iterate over data.
+        for inputs, labels in dataloaders['train']:
+            inputs = inputs.to(device=DEVICE, dtype=torch.float32)
+            labels = labels.to(device=DEVICE, dtype=torch.long).squeeze(1)
+            # zero the parameter gradients
+            optimizer.zero_grad()
+
+            # forward
+            with torch.set_grad_enabled(True):
+                outputs = model(inputs)
+                # The loss funciton used is cross entropy + Dice
+                loss = criterion(outputs, labels) 
+                loss += dice_loss(F.softmax(outputs, dim=1), F.one_hot(labels, N_CLASES_UNET).permute(0, 3, 1, 2).float(), multiclass=True)
+                #_, preds = torch.argmax(outputs, 1)
+                loss.backward()
+                optimizer.step()
+
+            # statistics
+            running_loss += loss.item() * inputs.size(0)
+
+        epoch_loss = running_loss / len(dataloaders['train'].dataset)
+        print('{} Loss: {:.4f}'.format('train', epoch_loss))
+        print(f"Time per epoch: {time.time() - init_epoch_time}")
+        print()
+
+    time_elapsed = time.time() - since
+    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+    return model
+
+# Segmentation
 def eval_unet(model, testloader, n_samples):
     since = time.time()
     model.eval()   # Set model to evaluate mode
     actual_samples = 0
+    mc = np.zeros([N_CLASES_UNET, N_CLASES_UNET])
 
-    # METRICS
-    TP = 0
-    FP = 0
-    TN = 0
-    FN = 0
-
-    # Batch is of size 1
     for inputs, labels in testloader:
-        # Batch is of size 1
-        assert inputs.shape[0] == 1
-
         inputs = inputs.to(device=DEVICE, dtype=torch.float32)
         labels = labels.to(device=DEVICE, dtype=torch.long).squeeze(1)
 
@@ -193,36 +186,29 @@ def eval_unet(model, testloader, n_samples):
             fig, axs = plt.subplots(1, 2)
             axs[0].imshow(labels.permute(1, 2, 0).cpu())
             axs[0].set_title('True mask')
-
-        labels = F.one_hot(labels, N_CLASES_UNET).permute(0, 3, 1, 2).float()
         
         with torch.no_grad():
             # predict the mask
             output = model(inputs)
             image_mask = output.argmax(dim=1)
+            # Para mostrar imagen de resultado en los primeros ejemplos
             if actual_samples < n_samples:
                 axs[1].imshow(image_mask.permute(1, 2, 0).cpu())
                 axs[1].set_title('Predicted mask')
                 actual_samples += 1
                 plt.savefig(MODEL_SAVE_DIR + "_" + str(actual_samples) + ".png")
-            output = F.one_hot(image_mask, N_CLASES_UNET).permute(0, 3, 1, 2).float()
 
             # Metricas
-            FN += (output - labels == -1).sum() # FN
-            FP += (output - labels == 1).sum()  # FP
-            TP += (output + labels == 2).sum()  # TP
-            TN += (output + labels == 0).sum()  # TN
+            mc += confusion_matrix(torch.flatten(labels).cpu(),torch.flatten(image_mask).cpu(), labels=list(range(N_CLASES_UNET)))
 
     # MATRIZ CONFUSION GENERAL
-    cmat = [[TP.cpu(), FN.cpu()], [FP.cpu(), TN.cpu()]]
+    mc /= len(testloader.dataset)
     plt.clf()
-    sns.heatmap(cmat/np.sum(cmat), cmap="Reds", annot=True, fmt = '.2%', square=1,   linewidth=2.)
+    fig, ax = plt.subplots(figsize=(10,10))
+    sns.heatmap(mc/np.sum(mc), cmap="Reds", annot=True, fmt = '.2%', square=1,   linewidth=2.)
     plt.xlabel("predictions")
     plt.ylabel("real values")
     plt.savefig(MODEL_SAVE_DIR + "_confusionMatrix.png")
-    
-    # CURVAS ROC
-    # Por hacer
 
     time_elapsed = time.time() - since
     print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -269,7 +255,6 @@ def multiclass_dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: boo
     return dice / input.shape[1]
 
 def dice_loss(input: Tensor, target: Tensor, multiclass: bool = False):
-    #pdb.set_trace()
     # Dice loss (objective to minimize) between 0 and 1
     assert input.size() == target.size()
     fn = multiclass_dice_coeff if multiclass else dice_coeff
@@ -326,10 +311,7 @@ class SegmentationMNIST(Dataset):
         target = self.image_template.detach().clone()
 
         for i in range(self.num_digits[idx]):
-            # if self.start_digit[idx]+i == 60000:
-            #     pdb.set_trace()
-            #digit, cls = self.mnist[self.start_digit[idx]+i]   # esto da error
-            digit, cls = self.mnist[(self.start_digit[idx]+i) % len(self.mnist)]   # parche tmeporal
+            digit, cls = self.mnist[(self.start_digit[idx]+i) % len(self.mnist)]
             mask = digit>0
 
             valid = False

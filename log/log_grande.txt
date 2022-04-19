@@ -1,0 +1,288 @@
+(FIPA) PS C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML_Lab2> python .\lab2.py
+LAB2 - PART1 EXECUTION
+BUILDING DATALOADERS...
+MODEL: pretrained_not_augmentation.pt
+Training MODEL pretrained_not_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.0730 Acc: 0.9825
+Time per epoch: 368.347608089447
+
+Epoch 1/2
+----------
+train Loss: 0.0261 Acc: 0.9925
+Time per epoch: 364.19276452064514
+
+Epoch 2/2
+----------
+train Loss: 0.0196 Acc: 0.9946
+Time per epoch: 364.27923369407654
+
+Training complete in 18m 17s
+EVALUATING MODE pretrained_not_augmentation.pt
+test Loss: 0.0201 Acc: 0.9943
+Test complete in 0m 23s
+MODEL: pretrained_augmentation.pt
+Training MODEL pretrained_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.1647 Acc: 0.9538
+Time per epoch: 376.7826645374298
+
+Epoch 1/2
+----------
+train Loss: 0.0657 Acc: 0.9809
+Time per epoch: 376.5956964492798
+
+Epoch 2/2
+----------
+train Loss: 0.0560 Acc: 0.9829
+Time per epoch: 378.0338077545166
+
+Training complete in 18m 51s
+EVALUATING MODE pretrained_augmentation.pt
+test Loss: 0.0232 Acc: 0.9916
+Test complete in 0m 23s
+MODEL: scratch_not_augmentation.pt
+Training MODEL scratch_not_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.1838 Acc: 0.9565
+Time per epoch: 364.36290097236633
+
+Epoch 1/2
+----------
+train Loss: 0.0438 Acc: 0.9872
+Time per epoch: 364.35321855545044
+
+Epoch 2/2
+----------
+train Loss: 0.0330 Acc: 0.9904
+Time per epoch: 364.5245506763458
+
+Training complete in 18m 13s
+EVALUATING MODE scratch_not_augmentation.pt
+test Loss: 0.0202 Acc: 0.9934
+Test complete in 0m 23s
+MODEL: scratch_augmentation.pt
+Training MODEL scratch_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.5566 Acc: 0.8283
+Time per epoch: 376.93723821640015
+
+Epoch 1/2
+----------
+train Loss: 0.1259 Acc: 0.9644
+Time per epoch: 376.6430802345276
+
+Epoch 2/2
+----------
+train Loss: 0.0969 Acc: 0.9717
+Time per epoch: 375.95551800727844
+
+Training complete in 18m 50s
+EVALUATING MODE scratch_augmentation.pt
+test Loss: 0.0839 Acc: 0.9727
+Test complete in 0m 23s
+BUILDING DATALOADERS...
+UNet(
+  (encoder1): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(1, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (pool1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (encoder2): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (pool2): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (encoder3): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (pool3): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (encoder4): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (pool4): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (horizontal): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(512, 1024, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(1024, 1024, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (upconv1): ConvTranspose2d(1024, 512, kernel_size=(2, 2), stride=(2, 2))
+  (decoder1): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(1024, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (upconv2): ConvTranspose2d(512, 256, kernel_size=(2, 2), stride=(2, 2))
+  (decoder2): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(512, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (upconv3): ConvTranspose2d(256, 128, kernel_size=(2, 2), stride=(2, 2))
+  (decoder3): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (upconv4): ConvTranspose2d(128, 64, kernel_size=(2, 2), stride=(2, 2))
+  (decoder4): DoubleConv(
+    (double_conv): Sequential(
+      (0): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (outConv): Conv2d(64, 11, kernel_size=(1, 1), stride=(1, 1))
+)
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+UNet                                     --                        --
+├─DoubleConv: 1-1                        [1, 64, 572, 572]         --
+│    └─Sequential: 2-1                   [1, 64, 572, 572]         --
+│    │    └─Conv2d: 3-1                  [1, 64, 572, 572]         576
+│    │    └─BatchNorm2d: 3-2             [1, 64, 572, 572]         128
+│    │    └─ReLU: 3-3                    [1, 64, 572, 572]         --
+│    │    └─Conv2d: 3-4                  [1, 64, 572, 572]         36,864
+│    │    └─BatchNorm2d: 3-5             [1, 64, 572, 572]         128
+│    │    └─ReLU: 3-6                    [1, 64, 572, 572]         --
+├─MaxPool2d: 1-2                         [1, 64, 286, 286]         --
+├─DoubleConv: 1-3                        [1, 128, 286, 286]        --
+│    └─Sequential: 2-2                   [1, 128, 286, 286]        --
+│    │    └─Conv2d: 3-7                  [1, 128, 286, 286]        73,728
+│    │    └─BatchNorm2d: 3-8             [1, 128, 286, 286]        256
+│    │    └─ReLU: 3-9                    [1, 128, 286, 286]        --
+│    │    └─Conv2d: 3-10                 [1, 128, 286, 286]        147,456
+│    │    └─BatchNorm2d: 3-11            [1, 128, 286, 286]        256
+│    │    └─ReLU: 3-12                   [1, 128, 286, 286]        --
+├─MaxPool2d: 1-4                         [1, 128, 143, 143]        --
+├─DoubleConv: 1-5                        [1, 256, 143, 143]        --
+│    └─Sequential: 2-3                   [1, 256, 143, 143]        --
+│    │    └─Conv2d: 3-13                 [1, 256, 143, 143]        294,912
+│    │    └─BatchNorm2d: 3-14            [1, 256, 143, 143]        512
+│    │    └─ReLU: 3-15                   [1, 256, 143, 143]        --
+│    │    └─Conv2d: 3-16                 [1, 256, 143, 143]        589,824
+│    │    └─BatchNorm2d: 3-17            [1, 256, 143, 143]        512
+│    │    └─ReLU: 3-18                   [1, 256, 143, 143]        --
+├─MaxPool2d: 1-6                         [1, 256, 71, 71]          --
+├─DoubleConv: 1-7                        [1, 512, 71, 71]          --
+│    └─Sequential: 2-4                   [1, 512, 71, 71]          --
+│    │    └─Conv2d: 3-19                 [1, 512, 71, 71]          1,179,648
+│    │    └─BatchNorm2d: 3-20            [1, 512, 71, 71]          1,024
+│    │    └─ReLU: 3-21                   [1, 512, 71, 71]          --
+│    │    └─Conv2d: 3-22                 [1, 512, 71, 71]          2,359,296
+│    │    └─BatchNorm2d: 3-23            [1, 512, 71, 71]          1,024
+│    │    └─ReLU: 3-24                   [1, 512, 71, 71]          --
+├─MaxPool2d: 1-8                         [1, 512, 35, 35]          --
+├─DoubleConv: 1-9                        [1, 1024, 35, 35]         --
+│    └─Sequential: 2-5                   [1, 1024, 35, 35]         --
+│    │    └─Conv2d: 3-25                 [1, 1024, 35, 35]         4,718,592
+│    │    └─BatchNorm2d: 3-26            [1, 1024, 35, 35]         2,048
+│    │    └─ReLU: 3-27                   [1, 1024, 35, 35]         --
+│    │    └─Conv2d: 3-28                 [1, 1024, 35, 35]         9,437,184
+│    │    └─BatchNorm2d: 3-29            [1, 1024, 35, 35]         2,048
+│    │    └─ReLU: 3-30                   [1, 1024, 35, 35]         --
+├─ConvTranspose2d: 1-10                  [1, 512, 70, 70]          2,097,664
+├─DoubleConv: 1-11                       [1, 512, 71, 71]          --
+│    └─Sequential: 2-6                   [1, 512, 71, 71]          --
+│    │    └─Conv2d: 3-31                 [1, 512, 71, 71]          4,718,592
+│    │    └─BatchNorm2d: 3-32            [1, 512, 71, 71]          1,024
+│    │    └─ReLU: 3-33                   [1, 512, 71, 71]          --
+│    │    └─Conv2d: 3-34                 [1, 512, 71, 71]          2,359,296
+│    │    └─BatchNorm2d: 3-35            [1, 512, 71, 71]          1,024
+│    │    └─ReLU: 3-36                   [1, 512, 71, 71]          --
+├─ConvTranspose2d: 1-12                  [1, 256, 142, 142]        524,544
+├─DoubleConv: 1-13                       [1, 256, 143, 143]        --
+│    └─Sequential: 2-7                   [1, 256, 143, 143]        --
+│    │    └─Conv2d: 3-37                 [1, 256, 143, 143]        1,179,648
+│    │    └─BatchNorm2d: 3-38            [1, 256, 143, 143]        512
+│    │    └─ReLU: 3-39                   [1, 256, 143, 143]        --
+│    │    └─Conv2d: 3-40                 [1, 256, 143, 143]        589,824
+│    │    └─BatchNorm2d: 3-41            [1, 256, 143, 143]        512
+│    │    └─ReLU: 3-42                   [1, 256, 143, 143]        --
+├─ConvTranspose2d: 1-14                  [1, 128, 286, 286]        131,200
+├─DoubleConv: 1-15                       [1, 128, 286, 286]        --
+│    └─Sequential: 2-8                   [1, 128, 286, 286]        --
+│    │    └─Conv2d: 3-43                 [1, 128, 286, 286]        294,912
+│    │    └─BatchNorm2d: 3-44            [1, 128, 286, 286]        256
+│    │    └─ReLU: 3-45                   [1, 128, 286, 286]        --
+│    │    └─Conv2d: 3-46                 [1, 128, 286, 286]        147,456
+│    │    └─BatchNorm2d: 3-47            [1, 128, 286, 286]        256
+│    │    └─ReLU: 3-48                   [1, 128, 286, 286]        --
+├─ConvTranspose2d: 1-16                  [1, 64, 572, 572]         32,832
+├─DoubleConv: 1-17                       [1, 64, 572, 572]         --
+│    └─Sequential: 2-9                   [1, 64, 572, 572]         --
+│    │    └─Conv2d: 3-49                 [1, 64, 572, 572]         73,728
+│    │    └─BatchNorm2d: 3-50            [1, 64, 572, 572]         128
+│    │    └─ReLU: 3-51                   [1, 64, 572, 572]         --
+│    │    └─Conv2d: 3-52                 [1, 64, 572, 572]         36,864
+│    │    └─BatchNorm2d: 3-53            [1, 64, 572, 572]         128
+│    │    └─ReLU: 3-54                   [1, 64, 572, 572]         --
+├─Conv2d: 1-18                           [1, 11, 572, 572]         715
+==========================================================================================
+Total params: 31,037,131
+Trainable params: 31,037,131
+Non-trainable params: 0
+Total mult-adds (G): 270.41
+==========================================================================================
+Input size (MB): 1.31
+Forward/backward pass size (MB): 2892.01
+Params size (MB): 124.15
+Estimated Total Size (MB): 3017.47
+==========================================================================================
+MODEL unet.pt is already trained
+EVALUATING MODE unet.pt
+Test complete in 1m 48s
