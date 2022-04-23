@@ -14,6 +14,7 @@ import pdb
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
+# DATALOADER FOR -> Exercise 1, MNIST classification 
 def buildDataLoaders_denseNet(data_augmentation=False):
     # Transform to resize data to DenseNet dimensions
     basic_transforms =  transforms.Compose([
@@ -26,6 +27,7 @@ def buildDataLoaders_denseNet(data_augmentation=False):
     if not data_augmentation:
         transform = basic_transforms
     else:
+        # DATA AUGMENTATION: random affine and color modification
         transform=transforms.Compose([
             transforms.RandomAffine(degrees=45, translate=(0.2, 0.2), scale=(0.75,1.25), shear=15),
             transforms.ColorJitter(brightness=(0.2,0.8), contrast=(0.2, 0.8)),
@@ -43,6 +45,7 @@ def buildDataLoaders_denseNet(data_augmentation=False):
 
     return dataloaders_dict
 
+# DATALOADER FOR -> Exercise 2, MNIST segmentation 
 def buildDataLoaders_UNET(image_size):
 
     trainset = SegmentationMNIST(DATA_DIR, train=True, image_size=image_size)
@@ -57,7 +60,9 @@ def buildDataLoaders_UNET(image_size):
 
     return dataloaders_dict
 
-# Clasification
+# Exercise 1 - MNIST classification | train model function
+# loss and accuracy as statistics.
+# Cost function -> CrossEntropyLoss
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=5):
     since = time.time()
 
@@ -100,7 +105,8 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=5):
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     return model
 
-# Clasification
+# Exercise 1 - MNIST classification | test model function
+# loss and accuracy as statistics.
 def eval_model(model, testloader, criterion):
     since = time.time()
     model.eval()   # Set model to evaluate mode
@@ -128,7 +134,9 @@ def eval_model(model, testloader, criterion):
     print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
 
-# Segmentation
+# Exercise 2, MNIST segmentation | train model function
+# Cost function -> CrossEntropyLoss + Dice 
+# loss as statistics
 def train_unet(model, dataloaders, criterion, optimizer, num_epochs=5):
     since = time.time()
 
@@ -169,7 +177,10 @@ def train_unet(model, dataloaders, criterion, optimizer, num_epochs=5):
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     return model
 
-# Segmentation
+# Exercise 2, MNIST segmentation | test model function
+# We add an n_samples param to print and save the segmentation result
+# for the first n_samples samples.
+# As metric we compute confusion_matrix
 def eval_unet(model, testloader, n_samples):
     since = time.time()
     model.eval()   # Set model to evaluate mode
@@ -213,18 +224,11 @@ def eval_unet(model, testloader, n_samples):
     time_elapsed = time.time() - since
     print('Test complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
-# SHOW DATASET
-def imshow(dataloader):
-    train_features, train_labels = next(iter(dataloader))
-    print(f"Feature batch shape: {train_features.size()}")
-    print(f"Labels batch shape: {train_labels.size()}")
-    img = train_features[0].squeeze()
-    label = train_labels[0]
-    plt.imshow(img, cmap="gray")
-    plt.show()
-    print(f"Label: {label}")
 
-
+#############################################################################################################################################
+#############################################################################################################################################
+#############################################################################################################################################
+# DICE COST FUNCTION FOR SEGMENTATION EXERCISE
 def dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: bool = False, epsilon=1e-6):
     # Average of Dice coefficient for all batches, or for a single mask
     assert input.size() == target.size()
@@ -259,7 +263,20 @@ def dice_loss(input: Tensor, target: Tensor, multiclass: bool = False):
     assert input.size() == target.size()
     fn = multiclass_dice_coeff if multiclass else dice_coeff
     return 1 - fn(input, target, reduce_batch_first=True)
+#############################################################################################################################################
+#############################################################################################################################################
 
+
+# SHOW DATASET
+def imshow(dataloader):
+    train_features, train_labels = next(iter(dataloader))
+    print(f"Feature batch shape: {train_features.size()}")
+    print(f"Labels batch shape: {train_labels.size()}")
+    img = train_features[0].squeeze()
+    label = train_labels[0]
+    plt.imshow(img, cmap="gray")
+    plt.show()
+    print(f"Label: {label}")
 
 
 class SegmentationMNIST(Dataset):

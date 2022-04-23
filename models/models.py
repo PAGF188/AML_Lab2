@@ -28,6 +28,11 @@ def denseNet121_basic():
     return model
 
 
+"""
+Some changes with respect to the original architecture:
+- Padding to get a final map of the same height and width as the input image.
+
+"""
 class UNet(nn.Module):
     def __init__(self, in_channels=1, out_channels=N_CLASES_UNET, init_features=64):
         super(UNet, self).__init__()
@@ -103,7 +108,7 @@ class UNet(nn.Module):
     class DoubleConv(nn.Module):
         def __init__(self, in_channels, features):
             super().__init__()
-            # Pad=1 -> conseguir mism size en salida.
+            # Padding 1
             self.double_conv = nn.Sequential(
                 nn.Conv2d(in_channels, features, kernel_size=3, padding=1, bias=False),
                 nn.BatchNorm2d(features),

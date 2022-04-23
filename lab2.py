@@ -21,7 +21,7 @@ def _part1_aux(model_name, model, dataloader, optimizer):
     print(f"EVALUATING MODE {model_name}")
     eval_model(model, dataloader['val'], CRITERION)
 
-
+# Exercise 1 - MNIST classification
 def part1():
     print("BUILDING DATALOADERS...")
     dataloaders_dict_base = buildDataLoaders_denseNet()
@@ -51,7 +51,7 @@ def part1():
     optimizer = torch.optim.Adam(model.parameters(), lr=LR_DENSENET)
     _part1_aux(MODEL3_SCRATCH_AUGMENTATION, model, dataloaders_dict_data_augmentation, optimizer)
 
-
+# Exercise 2 - MNIST segmentation
 def part2():
     print("BUILDING DATALOADERS...")
     dataloader = buildDataLoaders_UNET((572,572))
@@ -68,7 +68,7 @@ def part2():
         print(f"MODEL {MODEL_UNET} is already trained")
         model.load_state_dict(torch.load(os.path.join(MODEL_SAVE_DIR, MODEL_UNET)))
     else:
-        # Train the model if not
+        # Train the model if not exist
         print(f"Training MODEL {MODEL_UNET}")
         model = train_unet(model, dataloader, CRITERION, optimizer, num_epochs=NUM_EPOCHS)
         torch.save(model.state_dict(), os.path.join(MODEL_SAVE_DIR, MODEL_UNET))

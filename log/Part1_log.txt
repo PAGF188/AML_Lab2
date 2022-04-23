@@ -1,0 +1,87 @@
+(FIPA) PS C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML_Lab2> python .\lab2.py
+LAB2 - PART1 EXECUTION
+BUILDING DATALOADERS...
+MODEL: pretrained_not_augmentation.pt
+Training MODEL pretrained_not_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.0730 Acc: 0.9825
+Time per epoch: 368.347608089447
+
+Epoch 1/2
+----------
+train Loss: 0.0261 Acc: 0.9925
+Time per epoch: 364.19276452064514
+
+Epoch 2/2
+----------
+train Loss: 0.0196 Acc: 0.9946
+Time per epoch: 364.27923369407654
+
+Training complete in 18m 17s
+EVALUATING MODE pretrained_not_augmentation.pt
+test Loss: 0.0201 Acc: 0.9943
+Test complete in 0m 23s
+MODEL: pretrained_augmentation.pt
+Training MODEL pretrained_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.1647 Acc: 0.9538
+Time per epoch: 376.7826645374298
+
+Epoch 1/2
+----------
+train Loss: 0.0657 Acc: 0.9809
+Time per epoch: 376.5956964492798
+
+Epoch 2/2
+----------
+train Loss: 0.0560 Acc: 0.9829
+Time per epoch: 378.0338077545166
+
+Training complete in 18m 51s
+EVALUATING MODE pretrained_augmentation.pt
+test Loss: 0.0232 Acc: 0.9916
+Test complete in 0m 23s
+MODEL: scratch_not_augmentation.pt
+Training MODEL scratch_not_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.1838 Acc: 0.9565
+Time per epoch: 364.36290097236633
+
+Epoch 1/2
+----------
+train Loss: 0.0438 Acc: 0.9872
+Time per epoch: 364.35321855545044
+
+Epoch 2/2
+----------
+train Loss: 0.0330 Acc: 0.9904
+Time per epoch: 364.5245506763458
+
+Training complete in 18m 13s
+EVALUATING MODE scratch_not_augmentation.pt
+test Loss: 0.0202 Acc: 0.9934
+Test complete in 0m 23s
+MODEL: scratch_augmentation.pt
+Training MODEL scratch_augmentation.pt
+Epoch 0/2
+----------
+train Loss: 0.5566 Acc: 0.8283
+Time per epoch: 376.93723821640015
+
+Epoch 1/2
+----------
+train Loss: 0.1259 Acc: 0.9644
+Time per epoch: 376.6430802345276
+
+Epoch 2/2
+----------
+train Loss: 0.0969 Acc: 0.9717
+Time per epoch: 375.95551800727844
+
+Training complete in 18m 50s
+EVALUATING MODE scratch_augmentation.pt
+test Loss: 0.0839 Acc: 0.9727
+Test complete in 0m 23s
