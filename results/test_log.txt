@@ -1,5 +1,39 @@
-(FIPA) PS C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML-Lab2> python .\lab2.py
+(FIPA) PS C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML_Lab2> python .\lab2.py
+
 LAB2 - PART1 EXECUTION
+BUILDING DATALOADERS...
+MODEL: pretrained_not_augmentation.pt
+MODEL pretrained_not_augmentation.pt is already trained
+EVALUATING MODE pretrained_not_augmentation.pt
+test Loss: 0.0201 Acc: 0.9943
+Test complete in 0m 28s
+
+
+MODEL: pretrained_augmentation.pt
+MODEL pretrained_augmentation.pt is already trained
+EVALUATING MODE pretrained_augmentation.pt
+test Loss: 0.0232 Acc: 0.9916
+Test complete in 0m 23s
+
+
+MODEL: scratch_not_augmentation.pt
+MODEL scratch_not_augmentation.pt is already trained
+EVALUATING MODE scratch_not_augmentation.pt
+test Loss: 0.0202 Acc: 0.9934
+Test complete in 0m 24s
+
+
+MODEL: scratch_augmentation.pt
+MODEL scratch_augmentation.pt is already trained
+EVALUATING MODE scratch_augmentation.pt
+test Loss: 0.0839 Acc: 0.9727
+Test complete in 0m 24s
+
+
+
+
+
+
 BUILDING DATALOADERS...
 UNet(
   (encoder1): DoubleConv(
@@ -198,28 +232,6 @@ Forward/backward pass size (MB): 2892.01
 Params size (MB): 124.15
 Estimated Total Size (MB): 3017.47
 ==========================================================================================
-Training MODEL unet.pt
-Epoch 0/2
-----------
-train Loss: 0.7836
-Time per epoch: 1551.4518465995789
-
-Epoch 1/2
-----------
-train Loss: 0.6358
-Time per epoch: 1546.7321424484253
-
-Epoch 2/2
-----------
-train Loss: 0.5776
-Time per epoch: 1546.7989723682404
-
-Training complete in 77m 25s
+MODEL unet.pt is already trained
 EVALUATING MODE unet.pt
-Traceback (most recent call last):
-  File "C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML-Lab2\lab2.py", line 88, in <module>
-    part2()
-  File "C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML-Lab2\lab2.py", line 82, in part2
-    eval_model(model, MODEL_UNET['val'], CRITERION, unet=True)
-TypeError: string indices must be integers
-(FIPA) PS C:\Users\Usuario\Documents\Pablo\ComputerVision\AMLCV\Part2\AML-Lab2>
+Test complete in 1m 49s
